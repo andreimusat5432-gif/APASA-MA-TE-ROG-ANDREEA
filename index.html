@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Păianjeni 😈</title>
+
   <style>
     body {
       margin: 0;
+      width: 100vw;
       height: 100vh;
-      background: linear-gradient(135deg, #1b1b1b, #2e2e2e);
+      background: linear-gradient(135deg, #111, #2b2b2b);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -19,25 +21,26 @@
     .container {
       text-align: center;
       position: relative;
+      z-index: 5;
     }
 
     h1 {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
     button {
-      font-size: 20px;
-      padding: 15px 30px;
-      margin: 10px;
+      font-size: 22px;
+      padding: 15px 35px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease;
     }
 
     #da {
       background: #4caf50;
       color: white;
+      margin-right: 20px;
     }
 
     #nu {
@@ -50,59 +53,65 @@
       position: absolute;
       width: 40px;
       pointer-events: none;
-      animation: crawl 4s linear infinite;
+      animation: crawl 3s infinite alternate ease-in-out;
+      z-index: 1;
     }
 
     @keyframes crawl {
-      from { transform: translateY(0); }
-      to { transform: translateY(20px); }
+      from { transform: translateY(0) rotate(0deg); }
+      to { transform: translateY(20px) rotate(10deg); }
     }
 
     #final {
       font-size: 26px;
-      margin-top: 20px;
+      text-align: center;
+      padding: 20px;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
 
 <div class="container" id="container">
-  <h1>Vrei să fii mâncată de păianjeni, Andreea? 🕷️</h1>
+  <h1>Vrei să fii mâncată de păianjeni Andreea? 🕷️</h1>
   <button id="da">DA</button>
   <button id="nu">NU</button>
-  <div id="final"></div>
 </div>
 
 <script>
   const nu = document.getElementById("nu");
   const da = document.getElementById("da");
   const container = document.getElementById("container");
-  const finalText = document.getElementById("final");
 
-  let nuCount = 0;
   let daScale = 1;
 
-  const spiderImg = "https://upload.wikimedia.org/wikipedia/commons/5/55/Spider_icon.png";
+  // POZA TA CU PĂIANJENI
+  const spiderImg = "spider.png";
 
   function randomPosition() {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
-    return { x, y };
+    return {
+      x: Math.random() * (window.innerWidth - 100),
+      y: Math.random() * (window.innerHeight - 100)
+    };
   }
 
-  nu.addEventListener("mouseenter", () => {
-    nuCount++;
+  // poziție inițială pentru NU
+  const start = randomPosition();
+  nu.style.left = start.x + "px";
+  nu.style.top = start.y + "px";
 
+  // CLICK PE NU
+  nu.addEventListener("click", () => {
     // mută butonul NU
     const pos = randomPosition();
     nu.style.left = pos.x + "px";
     nu.style.top = pos.y + "px";
 
-    // DA devine mai mare
-    daScale += 0.1;
+    // mărește butonul DA
+    daScale += 0.15;
     da.style.transform = `scale(${daScale})`;
 
-    // apare un păianjen mic
+    // creează păianjen
     const spider = document.createElement("img");
     spider.src = spiderImg;
     spider.className = "spider";
@@ -110,23 +119,31 @@
     spider.style.top = pos.y + "px";
     document.body.appendChild(spider);
 
-    setTimeout(() => spider.remove(), 4000);
+    setTimeout(() => spider.remove(), 5000);
   });
 
+  // CLICK PE DA
   da.addEventListener("click", () => {
-    container.innerHTML = "";
-    finalText.innerText = "Bravo 😈 acum nu te-au mâncat, dar o să vină la noapte dacă nu dormi...";
-    document.body.appendChild(finalText);
+    document.body.innerHTML = `
+      <div id="final">
+        Bravo 😈<br>
+        acum nu te-au mâncat,<br>
+        dar o să vină la noapte dacă nu dormi...
+      </div>
+    `;
 
     // 1000 de păianjeni
     for (let i = 0; i < 1000; i++) {
       const spider = document.createElement("img");
       spider.src = spiderImg;
       spider.className = "spider";
+
       const pos = randomPosition();
       spider.style.left = pos.x + "px";
       spider.style.top = pos.y + "px";
-      spider.style.animationDuration = (Math.random() * 3 + 1) + "s";
+      spider.style.width = (20 + Math.random() * 40) + "px";
+      spider.style.animationDuration = (1 + Math.random() * 3) + "s";
+
       document.body.appendChild(spider);
     }
   });
